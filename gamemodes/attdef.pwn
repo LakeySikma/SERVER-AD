@@ -163,9 +163,11 @@ public OnPlayerConnect(playerid)
 	CheckPlayerAKA(playerid);
 
 	// Tell everyone that he's connected
-	new str[144];
+	new str[144], stre[256];
     GetPlayerCountry(playerid, str, sizeof(str));
 	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str);
+	format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
+	SendClientMessage(playerid, -1, stre);
     SendClientMessageToAll(-1, str);
     
     // Print their hardware ID in the server logs if AC is loaded
