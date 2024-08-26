@@ -101,6 +101,10 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+	Player[playerid][NetCheck] = 0;
+	Player[playerid][FPSCheck] = 0;
+	Player[playerid][PingCheck] = 0;
+	Player[playerid][PLCheck] = 0;
     // Check if version is out-dated and if server owners are forced to use newest version
 	if(VersionReport == VERSION_IS_BEHIND)
 	{
