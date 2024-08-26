@@ -1,0 +1,22 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build-normal",
+        "type": "shell",
+        "command": "D:/SERVER AD/pawno/pawncc.exe",
+        "args": ["D:/SERVER AD/gamemodes/attdef.pwn", "--%", "-Dgamemodes", "-;+", "-(+", "-d3"],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "isBackground": false,
+        "presentation": {
+          "reveal": "silent",
+          "panel": "dedicated"
+        },
+        "problemMatcher": "$pawncc"
+      }
+    ]
+  }
+  

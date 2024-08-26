@@ -1,0 +1,15 @@
+/*
+		Version checker: checks if server needs update (gamemode update)
+*/
+
+#define VERSION_CHECKER_VERSION_URL 	"unitedarmy.eu/SAMPAttackDefend/version.html"
+#define VERSION_CHECKER_FORCEUSER_URL	"unitedarmy.eu/SAMPAttackDefend/forceupdate.html"
+#define VERSION_CHECKER_UPDATE_WEBSITE	"unitedarmy.eu/SAMPAttackDefend/website.html"
+
+#define VERSION_IS_BEHIND       		0
+#define VERSION_IS_UPTODATE     		1
+
+new VersionReport = -1;
+new bool:VersionCheckerStatus = false, bool:ForceUserToNewestVersion = false;
+new Float:LatestVersion = 0.0;
+new VC_ConnectionFailures = 0;

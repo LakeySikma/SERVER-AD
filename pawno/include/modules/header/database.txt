@@ -1,0 +1,5 @@
+/*
+		Database loading
+*/
+
+new bool:DatabaseLoading = false;

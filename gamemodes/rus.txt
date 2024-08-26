@@ -1,0 +1,14 @@
+C:\Users\rendi\Desktop\SERVER AD\gamemodes\attdef.pwn(3610) : èäåíòèôèêàòîðó ïðèñâîåíî çíà÷åíèå, íî îí íå èñïîëüçóåòñÿ: "idx"
+C:\Users\rendi\Desktop\SERVER AD\gamemodes\attdef.pwn(9853) : íåïðàâèëüíàÿ òàáóëÿöèÿ
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\spectate.inc(268) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â StopSpectate
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\YSI_inc\YSI\..\YSI_Coding\..\YSI_Core\y_utils.inc(532) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â bernstein
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\YSI_inc\YSI\..\YSI_Coding\..\YSI_Core\y_utils.inc(874) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â memset: âûçîâ ñ rawMemset C:\Users\rendi\Desktop\SERVER AD\pawno\include\YSI_inc\YSI\..\YSI_Coding\..\YSI_Core\y_utils.inc(884)
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\match.inc(1115) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â PlayerLeadTeam: âûçîâ ñ ColorFix C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\common.inc(1695)
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\gunmenu.inc(283) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â ShowPlayerGunmenu: âûçîâ ñ ResetPlayerGunmenu C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\gunmenu.inc(141)
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\modules\src\common.inc(1606) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â GetPlayerHighestScores2
+C:\Users\rendi\Desktop\SERVER AD\pawno\include\YSI_inc\YSI\..\YSI_Coding\..\YSI_Core\..\YSI_Storage\..\amx\opcode.inc(106) : ïðåäóïðåæäåíèå: ðåêóðñèÿ â RelocateOpcodeNow
+Äëÿ îòêëþ÷åíèÿ âûâîäà ðåêóðñèé: #pragma disablerecursion
+Pawn compiler 3.2.3664	 	 	Copyright (c) 1997-2016, ITB CompuPhase
+
+
+Ïðåäóïðåæäåíèé:7.
