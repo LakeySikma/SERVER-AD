@@ -80,7 +80,8 @@ native IsValidVehicle(vehicleid);
 #include <discord-connector>
 #include "discord.pwn"
 #include "watermark.pwn"
-#include "android-check.inc"
+#include "server_watermark.pwn"
+//#include "android-check.inc"
 
 main()
 {}
@@ -91,6 +92,7 @@ public OnGameModeInit()
     InitScriptCoreSettings();
 	InitScriptSecondarySettings();
 	AddToServersDatabase();
+	InitServerTextDraw();
 	SetTimer("OnScriptUpdate", 1000, true); // Timer that is repeatedly called every second (will be using this for most global stuff)
 	return 1;
 }
@@ -104,6 +106,7 @@ public OnGameModeExit()
 
 public OnPlayerConnect(playerid)
 {
+	ShowServerWatermark(playerid);
 	Player[playerid][NetCheck] = 0;
 	Player[playerid][FPSCheck] = 0;
 	Player[playerid][PingCheck] = 0;
@@ -170,9 +173,14 @@ public OnPlayerConnect(playerid)
 	CheckPlayerAKA(playerid);
 
 	// Tell everyone that he's connected
-	new str[144], Client:type;
+	/*new str[144];
     GetPlayerCountry(playerid, str, sizeof(str));
-	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}][{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str, (type) ? ("Android") : ("Desktop"));
+	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}][{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str, (IsPlayerAndroid(playerid)) ? ("Android") : ("Desktop"));
+    SendClientMessageToAll(-1, str);*/
+
+	new str[144];
+    GetPlayerCountry(playerid, str, sizeof(str));
+	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}][{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str, IsPlayerAndroid(playerid) ? ("Mobile") : ("Desktop"));
     SendClientMessageToAll(-1, str);
     
     // Print their hardware ID in the server logs if AC is loaded
@@ -363,9 +371,6 @@ public OnPlayerRequestSpawn(playerid)
 
 public OnPlayerSpawn(playerid)
 {
-	new stre[512];
-	format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
-	SendClientMessage(playerid, -1, stre);
 	if(Player[playerid][IgnoreSpawn] == true)
 	{
 	    // This spawn call should be ignored (used for many things .. e.g the SyncPlayer function)
@@ -2181,6 +2186,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
                 {
                     CallLocalFunction("OnPlayerCommandText", "ds", playerid, sprintf("/ban %d No Reason Specified", LastClickedPlayer[playerid]));
                 }
+				case 14:
+                {
+                    CallLocalFunction("OnPlayerCommandText", "ds", playerid, sprintf("/getversion %d", LastClickedPlayer[playerid]));
+                }
             }
         }
 	    return 1;
@@ -3585,6 +3594,9 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 	                return 1;
 				}
 			}
+			new stre[512];
+			format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
+			SendClientMessage(playerid, -1, stre);
 			SpawnConnectedPlayer(playerid, listitem);
 		}
 		else
@@ -3855,21 +3867,37 @@ public ShowPlayerChangelog(index, response_code, data[])
 	return 1;
 }
 
-YCMD:getversion(playerid, params[], Client:type)
+YCMD:getversion(playerid, params[], help)
 {
-	new version[24], string[256], otherid;
-    if(sscanf(params, "u", otherid))
-       return SendUsageMessage(playerid, "/getversion [playerid/PartOfName]");
+    new version[24],  string[256];
+    if(sscanf(params, "u", params[0])) return SendClientMessage(playerid, -1, "/getversion [playerid]");
+    if(!IsPlayerConnected(params[0]) || params[0] == INVALID_PLAYER_ID) return SendClientMessage(playerid, -1, "Target isn't valid");
+    new name[MAX_PLAYER_NAME];
+    GetPlayerName(params[0], name, sizeof(name));
+    GetPlayerVersion(params[0], version, sizeof(version));
+    format(string, sizeof string, "Player Name: %s\nClient Version: %s\nPlatform: %s", name, version, IsPlayerAndroid(params[0]) ? ("Mobile") : ("Desktop"));
+	ShowPlayerDialog(playerid, DIALOG_NO_RESPONSE, DIALOG_STYLE_MSGBOX, "Version Checker", string, "Close", "");
+	return 1;
+}
 
-	GetPlayerVersion(otherid, version, sizeof(version));
+/*YCMD:versioncheck(playerid, params[], help)
+{
+    new otherid;
+    if(sscanf(params, "u", otherid))
+       return SendUsageMessage(playerid, "/versioncheck [playerid/PartOfName]");
 
     if(!IsPlayerConnected(otherid))
         return SendErrorMessage(playerid, "No player online or name is not found!");
 
-    format(string, sizeof(string), "Player Name: %s\nClient Version: %s\nPlatform: %s", Player[playerid][Name], version, (type) ? ("Android") : ("PC"));
+    //new hour, minutes;
+    //GetPlayerTime(otherid, hour, minutes);
+    //new string[150];
+    new version[24],  string[256], Client:type;
+    GetPlayerVersion(otherid, version, sizeof(version));
+    format(string, sizeof string, "Player Name: %s\nClient Version: %s\nPlatform: %s", Player[otherid][Name], version, (type) ? ("Mobile") : ("Desktop"));
 	ShowPlayerDialog(playerid, DIALOG_NO_RESPONSE, DIALOG_STYLE_MSGBOX, "Version Checker", string, "Close", "");
-	return 1;
-}
+    return 1;
+}*/
 
 YCMD:netcheckall(playerid, params[], help)
 {
@@ -10003,7 +10031,7 @@ public OnScriptUpdate()
 
 public OnPlayerClickPlayer(playerid, clickedplayerid, source)
 {
-    ShowPlayerDialog(playerid, PLAYERCLICK_DIALOG, DIALOG_STYLE_LIST, sprintf("Clicked ID: %d", clickedplayerid), "Getinfo\nAKA\nSpec\nAdd\nRemove\nReadd\nGunmenu\nGo\nGet\nSlap\nMute\nUnmute\nKick\nBan", "Select", "Cancel");
+    ShowPlayerDialog(playerid, PLAYERCLICK_DIALOG, DIALOG_STYLE_LIST, sprintf("Clicked ID: %d", clickedplayerid), "Getinfo\nAKA\nSpec\nAdd\nRemove\nReadd\nGunmenu\nGo\nGet\nSlap\nMute\nUnmute\nKick\nBan\nGetVersion", "Select", "Cancel");
 	LastClickedPlayer[playerid] = clickedplayerid;
 	return 1;
 }
