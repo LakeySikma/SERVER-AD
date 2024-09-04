@@ -5967,7 +5967,7 @@ YCMD:war(playerid, params[], help)
 	}
 	if(Current != -1) return SendErrorMessage(playerid,"Can't use this command while round is on.");
 
-	new TeamAName[7], TeamBName[7];
+	new TeamAName[15], TeamBName[15];
 	if(sscanf(params, "zz", TeamAName, TeamBName)) return SendUsageMessage(playerid,"/war ([Team A] [Team B]) (end)");
 	if(strcmp(TeamAName, "end", true) == 0 && isnull(TeamBName) && WarMode == true)
 	{
@@ -5980,13 +5980,13 @@ YCMD:war(playerid, params[], help)
 	} else if(isnull(TeamBName)) return SendUsageMessage(playerid,"/war ([Team A] [Team B]) (end)");
 
     if(WarMode == true) return SendErrorMessage(playerid,"War-mode is already on.");
-	if(strlen(TeamAName) > 6 || strlen(TeamBName) > 6) return SendErrorMessage(playerid,"Team name is too long.");
+	if(strlen(TeamAName) > 15 || strlen(TeamBName) > 15) return SendErrorMessage(playerid,"Team name is too long.");
 	if(strfind(TeamAName, "~") != -1 || strfind(TeamBName, "~") != -1) return SendErrorMessage(playerid,"~ not allowed.");
  	
 	format(TeamName[ATTACKER], 7, TeamAName);
-	format(TeamName[ATTACKER_SUB], 11, "%s Sub", TeamName[ATTACKER]);
+	format(TeamName[ATTACKER_SUB], 15, "%s Sub", TeamName[ATTACKER]);
 	format(TeamName[DEFENDER], 7, TeamBName);
-	format(TeamName[DEFENDER_SUB], 11, "%s Sub", TeamName[DEFENDER]);
+	format(TeamName[DEFENDER_SUB], 15, "%s Sub", TeamName[DEFENDER]);
 	UpdateTeamScoreTextDraw();
 	UpdateRoundsPlayedTextDraw();
 	UpdateTeamNameTextDraw();
