@@ -119,3 +119,62 @@ SendDiscordEmbedMessage(channel, title[] = "", message[], footer[] = "")
 	}
 	return 1;
 }
+
+DCMD:tc(user, channel, params[])
+{
+	new 
+		DCC_Channel:attackerchat = DCC_FindChannelById("1276452442061672521"),
+		DCC_Channel:defenderchat = DCC_FindChannelById("1276452560299102268"),
+		username[DCC_NICKNAME_SIZE],
+		dstring[512]
+	;
+
+	/*DCC_GetChannelId(channel, attackerchat);
+	DCC_GetChannelId(channel, defenderchat);
+	if(channel != attackerchat || channel != defenderchat) 
+		return DCC_SendChannelMessage(channel, "```\nThis command can only use in channel #attacker-chat-logs/#defender-chat-logs\n```");*/
+
+	DCC_GetUserName(user, username);
+
+	new ChatString[512], ChatColor;
+	format(ChatString,sizeof(ChatString),"%s Team Chat | %s | %s", TeamName[ATTACKER], username, params);
+	foreach(new i : Player)
+	{
+		switch(Player[i][Team])
+		{
+			case REFEREE: 		ChatColor = 0xFFFF90FF;
+			case DEFENDER: 		ChatColor = 0x0088FFFF;
+			case ATTACKER: 		ChatColor = 0xFF2040FF;
+			case ATTACKER_SUB: 	ChatColor = ATTACKER_SUB_COLOR;
+			case DEFENDER_SUB: 	ChatColor = DEFENDER_SUB_COLOR;
+			case NON:
+			{ SendErrorMessage(i,"You must be part of a team."); return 0; }
+		}
+		/*if(Player[i][Team] != NON)
+		{
+	        if((Player[i][Team] == DEFENDER || Player[i][Team] == DEFENDER_SUB) && (Player[i][Team] == DEFENDER || Player[i][Team] == DEFENDER_SUB))
+			{ SendClientMessage(i, ChatColor, ChatString); PlayerPlaySound(i,1137,0.0,0.0,0.0); }
+			if(Player[i][Team] == REFEREE && Player[i][Team] == REFEREE && !Player[i][InDuel])
+		   	{ SendClientMessage(i, ChatColor, ChatString); PlayerPlaySound(i,1137,0.0,0.0,0.0); }
+		}*/
+	}
+
+	if(channel == attackerchat)
+	{
+		foreach(new z : Player)
+		{
+			if(Player[z][Team] != NON)
+			{
+				if((Player[z][Team] == ATTACKER || Player[z][Team] == ATTACKER_SUB))
+				{ 
+					SendClientMessage(z, ChatColor, ChatString); 
+					PlayerPlaySound(z, 1137,0.0,0.0,0.0); 
+				}
+			}
+		}
+		format(dstring, sizeof dstring, "```%s Team Chat | %s | %s```",  TeamName[ATTACKER], username, params);
+
+		SendDiscordMessage(8, dstring);
+	}
+	return 1;
+}

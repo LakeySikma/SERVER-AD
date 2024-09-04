@@ -2366,3 +2366,7 @@
 [08/24/24 13:56:50] [plugins/discord-connector] Can't write to Discord websocket gateway: The I/O operation has been aborted because of either a thread exit or an application request (995)
 [08/24/24 13:56:51] [plugins/discord-connector] Discord terminated websocket connection; reason: Authentication failed. (4004)
 [08/24/24 13:56:52] [plugins/discord-connector] Discord terminated websocket connection; reason: Authentication failed. (4004)
+[09/04/24 17:45:55] [plugins/discord-connector] Discord terminated websocket connection; reason: Disallowed intent(s). (4014)
+[09/04/24 17:45:55] [plugins/discord-connector] Can't write to Discord websocket gateway: The I/O operation has been aborted because of either a thread exit or an application request (995)
+[09/04/24 17:46:32] [plugins/discord-connector] Discord terminated websocket connection; reason: Disallowed intent(s). (4014)
+[09/04/24 17:46:32] [plugins/discord-connector] Can't write to Discord websocket gateway: The I/O operation has been aborted because of either a thread exit or an application request (995)
