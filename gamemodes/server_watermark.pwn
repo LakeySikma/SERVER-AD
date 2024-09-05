@@ -42,11 +42,3 @@ ShowServerWatermark(playerid)
 	}
     return 1;
 }
-
-forward BotUpdate();
-public BotUpdate()
-{
-    new str[1280];
-    format(str, sizeof(str), "%d/20 Player | Comoter A/D ", Iter_Count(Player));
-    DCC_SetBotActivity(str);
-}
