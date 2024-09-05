@@ -1504,7 +1504,7 @@ UpdateTeamNameTextDraw()
 {
 	/*TextDrawSetString(TeamAttackerTD, sprintf("~r~~h~~h~%s", TeamName[ATTACKER]));
 	TextDrawSetString(TeamDefenderTD, sprintf("~b~~h~~h~%s", TeamName[DEFENDER]));*/
-	new iString[64];
+	new iString[128];
 	format(iString, sizeof(iString), "~r~%s %s(~r~%d%s) ~b~~h~%s %s(~b~~h~%d%s)", TeamName[ATTACKER], MAIN_TEXT_COLOUR, TeamScore[ATTACKER], MAIN_TEXT_COLOUR, TeamName[DEFENDER], MAIN_TEXT_COLOUR, TeamScore[DEFENDER], MAIN_TEXT_COLOUR);
     TextDrawSetString(TeamScoreText, iString);
 	UpdateRoundsPlayedTextDraw();

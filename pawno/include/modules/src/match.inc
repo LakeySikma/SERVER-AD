@@ -2998,6 +2998,7 @@ EndRound(WinID) //WinID: 0 = CP, 1 = RoundTime, 2 = NoAttackersLeft, 3 = NoDefen
 		format(dstr, sizeof dstr, "```%s Win (%d) - (%d) %s Lose```", TeamName[DEFENDER], TeamScore[DEFENDER], TeamScore[ATTACKER], TeamName[ATTACKER]);
 	}
 	format(lstr, sizeof lstr, "%s\n**Top Player:**\n```%s\n%s\n%s```", dstr, dTopString[0], dTopString[1], dTopString[2]);
+	format(lstr, sizeof lstr, "```Man of the round is: %s%s```", playerScores[topOverallID][player_Team], names[topOverallID]);
 	SendDiscordEmbedMessage(1, "Round Win", lstr, "Round Logs");
 
 	iString = "";

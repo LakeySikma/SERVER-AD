@@ -5980,13 +5980,13 @@ YCMD:war(playerid, params[], help)
 	} else if(isnull(TeamBName)) return SendUsageMessage(playerid,"/war ([Team A] [Team B]) (end)");
 
     if(WarMode == true) return SendErrorMessage(playerid,"War-mode is already on.");
-	if(strlen(TeamAName) > 15 || strlen(TeamBName) > 15) return SendErrorMessage(playerid,"Team name is too long.");
+	if(strlen(TeamAName) > 25 || strlen(TeamBName) > 25) return SendErrorMessage(playerid,"Team name is too long.");
 	if(strfind(TeamAName, "~") != -1 || strfind(TeamBName, "~") != -1) return SendErrorMessage(playerid,"~ not allowed.");
  	
 	format(TeamName[ATTACKER], 7, TeamAName);
-	format(TeamName[ATTACKER_SUB], 15, "%s Sub", TeamName[ATTACKER]);
+	format(TeamName[ATTACKER_SUB], 25, "%s Sub", TeamName[ATTACKER]);
 	format(TeamName[DEFENDER], 7, TeamBName);
-	format(TeamName[DEFENDER_SUB], 15, "%s Sub", TeamName[DEFENDER]);
+	format(TeamName[DEFENDER_SUB], 25, "%s Sub", TeamName[DEFENDER]);
 	UpdateTeamScoreTextDraw();
 	UpdateRoundsPlayedTextDraw();
 	UpdateTeamNameTextDraw();
