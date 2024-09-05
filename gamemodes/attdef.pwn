@@ -79,9 +79,7 @@ native IsValidVehicle(vehicleid);
 #include <discord-cmd>
 #include <discord-connector>
 #include "discord.pwn"
-#include "watermark.pwn"
 #include "server_watermark.pwn"
-//#include "android-check.inc"
 
 main()
 {}
