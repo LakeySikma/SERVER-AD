@@ -3880,25 +3880,6 @@ YCMD:getversion(playerid, params[], help)
 	return 1;
 }
 
-/*YCMD:versioncheck(playerid, params[], help)
-{
-    new otherid;
-    if(sscanf(params, "u", otherid))
-       return SendUsageMessage(playerid, "/versioncheck [playerid/PartOfName]");
-
-    if(!IsPlayerConnected(otherid))
-        return SendErrorMessage(playerid, "No player online or name is not found!");
-
-    //new hour, minutes;
-    //GetPlayerTime(otherid, hour, minutes);
-    //new string[150];
-    new version[24],  string[256], Client:type;
-    GetPlayerVersion(otherid, version, sizeof(version));
-    format(string, sizeof string, "Player Name: %s\nClient Version: %s\nPlatform: %s", Player[otherid][Name], version, (type) ? ("Mobile") : ("Desktop"));
-	ShowPlayerDialog(playerid, DIALOG_NO_RESPONSE, DIALOG_STYLE_MSGBOX, "Version Checker", string, "Close", "");
-    return 1;
-}*/
-
 YCMD:netcheckall(playerid, params[], help)
 {
 	new toggle;
@@ -5967,7 +5948,7 @@ YCMD:war(playerid, params[], help)
 	}
 	if(Current != -1) return SendErrorMessage(playerid,"Can't use this command while round is on.");
 
-	new TeamAName[15], TeamBName[15];
+	new TeamAName[25], TeamBName[25];
 	if(sscanf(params, "zz", TeamAName, TeamBName)) return SendUsageMessage(playerid,"/war ([Team A] [Team B]) (end)");
 	if(strcmp(TeamAName, "end", true) == 0 && isnull(TeamBName) && WarMode == true)
 	{
@@ -5983,9 +5964,9 @@ YCMD:war(playerid, params[], help)
 	if(strlen(TeamAName) > 25 || strlen(TeamBName) > 25) return SendErrorMessage(playerid,"Team name is too long.");
 	if(strfind(TeamAName, "~") != -1 || strfind(TeamBName, "~") != -1) return SendErrorMessage(playerid,"~ not allowed.");
  	
-	format(TeamName[ATTACKER], 7, TeamAName);
+	format(TeamName[ATTACKER], 25, TeamAName);
 	format(TeamName[ATTACKER_SUB], 25, "%s Sub", TeamName[ATTACKER]);
-	format(TeamName[DEFENDER], 7, TeamBName);
+	format(TeamName[DEFENDER], 25, TeamBName);
 	format(TeamName[DEFENDER_SUB], 25, "%s Sub", TeamName[DEFENDER]);
 	UpdateTeamScoreTextDraw();
 	UpdateRoundsPlayedTextDraw();

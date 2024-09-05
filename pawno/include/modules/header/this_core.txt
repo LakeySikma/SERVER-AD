@@ -17,4 +17,4 @@ new 			GM_WEBSITE[50]	=	    "github.com/beijind/SAMPAttackDefend";
 
 new DB:sqliteconnection; // SQLite Databases
 new teamskinlist = mS_INVALID_LISTID, playerskinlist = mS_INVALID_LISTID;
-new lagcompmode = 0;
+new lagcompmode = 2;

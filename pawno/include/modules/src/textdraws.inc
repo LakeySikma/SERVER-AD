@@ -1166,7 +1166,7 @@ UpdateRoundKillDmgTDmg(playerid)
 
 UpdateTeamNamesTextdraw()
 {
-	new str[16];
+	new str[128];
 	format(str, sizeof(str), "~r~~h~~h~%s", TeamName[ATTACKER]);
 	TextDrawSetString(attackerNameTD, str);
 	TextDrawSetString(AttDef_ModernRoundStats[3], str);
