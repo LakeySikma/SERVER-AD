@@ -576,7 +576,7 @@ public ServerOnPlayerDeath(playerid, killerid, reason)
 		        }
 		        default:
 			    {
-				    switch(random(4))
+				    switch(random(8))
 				    {
 				        case 0:
 				        {
@@ -597,6 +597,26 @@ public ServerOnPlayerDeath(playerid, killerid, reason)
 					    {
 						    PlayerTextDrawSetString(playerid, DeathText[playerid][1], sprintf("~r~~h~%s%s sent you to cemetery", Player[killerid][Name], MAIN_TEXT_COLOUR));
                             PlayerTextDrawSetString(killerid, DeathText[killerid][0], sprintf("%sYou sent ~r~~h~%s%s to cemetery", MAIN_TEXT_COLOUR, Player[playerid][Name], MAIN_TEXT_COLOUR));
+					    }
+						case 4:
+					    {
+						    PlayerTextDrawSetString(playerid, DeathText[playerid][1], sprintf("~r~~h~%s%s sent you to hell", Player[killerid][Name], MAIN_TEXT_COLOUR));
+                            PlayerTextDrawSetString(killerid, DeathText[killerid][0], sprintf("%sYou sent ~r~~h~%s%s to hell", MAIN_TEXT_COLOUR, Player[playerid][Name], MAIN_TEXT_COLOUR));
+					    }
+						case 5:
+					    {
+						    PlayerTextDrawSetString(playerid, DeathText[playerid][1], sprintf("~r~~h~%s%s sent you to heaven", Player[killerid][Name], MAIN_TEXT_COLOUR));
+                            PlayerTextDrawSetString(killerid, DeathText[killerid][0], sprintf("%sYou sent ~r~~h~%s%s to heaven", MAIN_TEXT_COLOUR, Player[playerid][Name], MAIN_TEXT_COLOUR));
+					    }
+						case 6:
+					    {
+						    PlayerTextDrawSetString(playerid, DeathText[playerid][1], sprintf("~r~~h~%s%s ended you", Player[killerid][Name], MAIN_TEXT_COLOUR));
+                            PlayerTextDrawSetString(killerid, DeathText[killerid][0], sprintf("%sYou ended ~r~~h~%s", MAIN_TEXT_COLOUR, Player[playerid][Name]));
+					    }
+						case 7:
+					    {
+						    PlayerTextDrawSetString(playerid, DeathText[playerid][1], sprintf("~r~~h~%s%s sent you to lobby", Player[killerid][Name], MAIN_TEXT_COLOUR));
+                            PlayerTextDrawSetString(killerid, DeathText[killerid][0], sprintf("%sYou sent ~r~~h~%s%s to lobby", MAIN_TEXT_COLOUR, Player[playerid][Name], MAIN_TEXT_COLOUR));
 					    }
 				    }
 			    }
