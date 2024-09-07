@@ -3613,7 +3613,10 @@ public OnDialogResponse(playerid, dialogid, response, listitem, inputtext[])
 				}
 			}
 			new stre[512];
-			format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
+			if(Player[playerid][Level] > 0)
+			{
+				format(stre, sizeof stre, ""COL_PRIM"You have logged in with admin-level %d", Player[playerid][Level]);
+			}
 			SendClientMessage(playerid, -1, stre);
 			SpawnConnectedPlayer(playerid, listitem);
 		}
@@ -3858,6 +3861,12 @@ YCMD:cmdhelp(playerid, params[], help)
     if(isnull(params)) return SendUsageMessage(playerid, "/cmdhelp [Command name]");
     Command_ReProcess(playerid, params, true);
     return 1;
+}
+
+YCMD:rsc(playerid, params[], help)
+{
+	SendClientMessage(playerid, -1, sprintf("Respect State: %d", Player[playerid][Respect]));
+	return 1;
 }
 
 YCMD:checkversion(playerid, params[])
@@ -9715,6 +9724,27 @@ public OnPlayerKeyStateChange(playerid, newkeys, oldkeys)
 	        // Lead team
 	        if(PRESSED(262144) && AllowStartBase == true)
             {
+				if(Player[playerid][Respect] == true)
+				{
+					new str[256];
+					foreach(new i : Player)
+					{
+						switch(random(2))
+						{
+							case 0:
+							{
+								format(str, sizeof str, ""COL_PRIM"%s%s: {FFFFFF}(%d) Play Fair Everyone", GetColor(GetPlayerColor(playerid)), Player[playerid][Name],  playerid);
+								SendClientMessage(i, -1, str);
+							}
+							case 1:
+							{
+								format(str, sizeof str, ""COL_PRIM"%s%s: {FFFFFF}(%d) Keep Respect Everyone", GetColor(GetPlayerColor(playerid)), Player[playerid][Name], playerid);
+								SendClientMessage(i, -1, str);
+							}
+						}
+					}
+					Player[playerid][Respect] = false;
+				}
                 if(GetPlayerVehicleID(playerid))
                     return 1;
 

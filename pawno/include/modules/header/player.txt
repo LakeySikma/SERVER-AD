@@ -60,6 +60,7 @@ enum PlayerVariables
 	LastMsgr,
 	blockedid,
 	FightStyle,
+	bool:Respect,
 
 	IsSpectatingID,
 	Level,

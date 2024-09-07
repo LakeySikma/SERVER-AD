@@ -2465,6 +2465,7 @@ SpawnPlayersInBase()
 	SendClientMessageToAll(-1, sprintf(""COL_PRIM"Current base set: {FFFFFF}%s. "COL_PRIM"Type {FFFFFF}/loadbases "COL_PRIM"to switch base sets!", CurrentBaseSet));
 	foreach(new i : Player)
 	{
+	
 	    if(Player[i][ToAddInRound] == true)
 		{
 			if(Player[i][InDM] == true)
@@ -2487,6 +2488,8 @@ SpawnPlayersInBase()
 			Player[i][WasInTeam] = Player[i][Team];
 			Iter_Add(PlayersInRound, i);
 			ResetPlayerRoundVariables(i);
+			SendClientMessage(i, -1, ""COL_PRIM"Press {FFFF00}H{01A2F8} to give respect for all players");
+			Player[i][Respect] = true;
 
 			PlayerPlaySound(i, 1057, 0, 0, 0);
 			SetCameraBehindPlayer(i);
@@ -2721,6 +2724,10 @@ EndRound(WinID) //WinID: 0 = CP, 1 = RoundTime, 2 = NoAttackersLeft, 3 = NoDefen
 
 	PlayersDead[ATTACKER] = 0;
 	PlayersDead[DEFENDER] = 0;
+	foreach(new i : Player)
+	{
+		Player[i][Respect] = false;
+	}
 
     GangZoneDestroy(CPZone);
 	GangZoneDestroy(ArenaZone);
