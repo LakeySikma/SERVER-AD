@@ -4903,7 +4903,7 @@ YCMD:autobalance(playerid, params[], help)
 
 YCMD:gmx(playerid, params[], help)
 {
-	if(!IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a level 5 admin to do that.");
+	if(!IsPlayerAdmin(playerid)) return SendErrorMessage(playerid,"You need to be a rcon admin.");
     if(help)
 	{
 	    SendCommandHelpMessage(playerid, "restart your server.");
